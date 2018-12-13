@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/edit_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,14 +9,22 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_baby"/>
+        android:id="@+id/baby_bottle_dialog_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/ic_baby"/>
 
     <TextView
-        android:id="@+id/lbl_your_name"
+        android:id="@+id/first_time_recommend_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/first_time_recommend_text" />
 
+    <Button
+        android:id="@+id/first_time_dialog_ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/first_time_dialog_ok_button"/>
 </LinearLayout>
