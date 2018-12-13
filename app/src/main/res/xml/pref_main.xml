@@ -5,14 +5,10 @@
 
     <PreferenceCategory android:title="General">
 
-        <ListPreference
+        <com.briandemaio.bpump.NumberPickerPreference
             android:defaultValue="3"
-            android:dialogTitle="@string/title_upload_quality"
-            android:entries="@array/pref_upload_quality_entries"
-            android:entryValues="@array/pref_upload_quality_values"
-            android:key="@string/key_upload_quality"
-            android:summary="@string/summary_upload_video_quality"
-            android:title="@string/title_upload_quality" />
+            android:key="@string/keys_num1"
+            android:title="Reminder Time Length (hrs)"/>
 
     </PreferenceCategory>
 
