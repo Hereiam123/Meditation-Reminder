@@ -1,12 +1,8 @@
 package com.briandemaio.bpump;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -18,7 +14,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity {
-    private static final String TAG = SettingsPrefActivity.class.getSimpleName();
+    //private static final String TAG = SettingsPrefActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +35,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_gallery_name)));
 
             // notification preference change listener
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));
+            //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));
 
             // feedback preference click listener
             /*Preference myPref = findPreference(getString(R.string.key_send_feedback));
@@ -103,7 +99,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
 
                     if (ringtone == null) {
                         // Clear the summary if there was a lookup error.
-                        preference.setSummary(R.string.summary_choose_ringtone);
+                        //preference.setSummary(R.string.summary_choose_ringtone);
                     } else {
                         // Set the summary to reflect the new ringtone display
                         // name.

@@ -119,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
             // Create the NotificationChannel with all the parameters.
             NotificationChannel notificationChannel = new NotificationChannel
                     (PRIMARY_CHANNEL_ID,
-                            "Pump Notification",
+                            "Pump Breast Milk Notification",
                             NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
             notificationChannel.setDescription
-                    ("Notifies user to pump");
+                    ("Notifies user to pump breat milk");
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
     }
