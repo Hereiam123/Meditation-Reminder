@@ -33,5 +33,5 @@
     <string name="notifications_new_message">notifications_new_message</string>
     <string name="key_notifications_new_message_ringtone">key_notifications_new_message_ringtone</string>
     <string name="key_vibrate">key_vibrate</string>-->
-    <string name="keys_num1">num_1</string>
+    <string name="keys_num_1">num_1</string>
 </resources>

@@ -5,7 +5,7 @@
     <PreferenceCategory android:title="General">
         <com.briandemaio.bpump.NumberPickerPreference
             android:defaultValue="3"
-            android:key="@string/keys_num1"
+            android:key="@string/keys_num_1"
             android:title="Reminder Time Length (hrs)"/>
     </PreferenceCategory>
 </PreferenceScreen>

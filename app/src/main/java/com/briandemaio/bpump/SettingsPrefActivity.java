@@ -32,7 +32,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_main);
 
             // gallery EditText change listener
-            //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_gallery_name)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.keys_num_1)));
 
             // notification preference change listener
             //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));

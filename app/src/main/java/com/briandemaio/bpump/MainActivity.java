@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final Button left = findViewById(R.id.button2);
-        Button right = findViewById(R.id.button1);
+        final Button right = findViewById(R.id.button1);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         createNotificationChannel();
@@ -49,10 +49,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(!isLeftSet) {
                     setTimeAlarm("Left");
-                    left.setText('Left Breast Timer Set');
+                    left.setText("Left Breast Timer Set");
+                    isLeftSet=true;
                 }
                 else{
                     cancelTimeAlarm("Left");
+                    left.setText("Left Breast Timer Not Set");
+                    isLeftSet=false;
                 }
             }
         });
@@ -60,7 +63,16 @@ public class MainActivity extends AppCompatActivity {
         right.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                setItemTimeAlarm("Right");
+                if(!isRightSet) {
+                    setTimeAlarm("Right");
+                    right.setText("Right Breast Timer Set");
+                    isRightSet=true;
+                }
+                else{
+                    cancelTimeAlarm("Right");
+                    right.setText("Right Breast Timer Not Set");
+                    isRightSet=false;
+                }
             }
         });
     }
@@ -95,13 +107,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTimeAlarm(String leftOrRight) {
-        long timeInterval = (mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis();
+        long timeInterval = (mPreferences.getInt("keys_num_1", 0) * 3600000)+ System.currentTimeMillis();
         int broadcastId = 1;
         if(leftOrRight == "Left"){
             broadcastId = 2;
         }
-        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" on id "+broadcastId,
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" Breast, for "+
+                        mPreferences.getInt("keys_num_1", 0)+ " hours",
+                Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to pump "+leftOrRight);
@@ -117,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
         if(leftOrRight == "Left"){
             broadcastId = 2;
         }
-        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" on id "+broadcastId,
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Canceled timer for "+leftOrRight+" Breast",
+                Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
         PendingIntent cancelPendingIntent= PendingIntent.getBroadcast
