@@ -2,13 +2,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <PreferenceCategory android:title="General">
-
         <com.briandemaio.bpump.NumberPickerPreference
             android:defaultValue="3"
             android:key="@string/keys_num1"
             android:title="Reminder Time Length (hrs)"/>
-
     </PreferenceCategory>
 </PreferenceScreen>

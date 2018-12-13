@@ -13,20 +13,16 @@
     <string name="start">GOT IT</string>
 
     <string name="slide_1_title">Welcome!</string>
-    <string name="slide_1_desc">How Often To - Water Succulents!</string>
+    <string name="slide_1_desc">How Often To - Pump Breast Milk</string>
 
-    <string name="slide_2_title">Add Your Succulent!</string>
-    <string name="slide_2_desc">Click the Plus Button to start adding!</string>
+    <string name="slide_2_title">Timer Settings</string>
+    <string name="slide_2_desc">There are options to set timers for either the Left or Right breast</string>
 
-    <string name="slide_3_title">Swipe away the Trash</string>
-    <string name="slide_3_desc">Swipe left or right on an added Succulent to view menu options!</string>
-
-    <string name="slide_4_title">Click the Water Button</string>
-    <string name="slide_4_desc">Click on the Water Icon to reset a friends timer!</string>
+    <string name="slide_3_title">Edit Interval Settings</string>
+    <string name="slide_3_desc">The Settings options will allow you to set a custom interval</string>
 
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
-
 
     <!--
     <string name="pref_title_notifications">Notifications</string>

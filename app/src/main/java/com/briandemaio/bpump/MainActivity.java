@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mPreferences;
 
+    private boolean isLeftSet;
+    private boolean isRightSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button left = findViewById(R.id.button2);
+        final Button left = findViewById(R.id.button2);
         Button right = findViewById(R.id.button1);
 
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -44,7 +47,13 @@ public class MainActivity extends AppCompatActivity {
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setItemTimeAlarm("Left");
+                if(!isLeftSet) {
+                    setTimeAlarm("Left");
+                    left.setText('Left Breast Timer Set');
+                }
+                else{
+                    cancelTimeAlarm("Left");
+                }
             }
         });
 
@@ -85,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setItemTimeAlarm(String leftOrRight) {
+    public void setTimeAlarm(String leftOrRight) {
         long timeInterval = (mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis();
         int broadcastId = 1;
         if(leftOrRight == "Left"){
@@ -101,6 +110,22 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, timeInterval
                 , notifyPendingIntent);
+    }
+
+    public void cancelTimeAlarm(String leftOrRight) {
+        int broadcastId = 1;
+        if(leftOrRight == "Left"){
+            broadcastId = 2;
+        }
+        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" on id "+broadcastId,
+                Toast.LENGTH_LONG).show();
+        Intent notifyIntent = new Intent(this, AlarmReceiver.class);
+        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
+        PendingIntent cancelPendingIntent= PendingIntent.getBroadcast
+                (this, broadcastId, notifyIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        cancelPendingIntent.cancel();
+        alarmManager.cancel(cancelPendingIntent);
     }
 
     /**

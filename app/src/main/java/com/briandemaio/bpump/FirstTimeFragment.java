@@ -27,7 +27,7 @@ public class FirstTimeFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_edit_file, container);
+        return inflater.inflate(R.layout.main_activity_reminder, container);
     }
 
     @Override
