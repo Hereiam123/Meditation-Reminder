@@ -1,14 +1,11 @@
 package com.briandemaio.bpump;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 // ...
 
 public class FirstTimeFragment extends DialogFragment {
@@ -34,7 +31,7 @@ public class FirstTimeFragment extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button dismissButton = view.findViewById(R.id.first_time_dialog_ok_button);
         dismissButton.setOnClickListener(new View.OnClickListener() {
