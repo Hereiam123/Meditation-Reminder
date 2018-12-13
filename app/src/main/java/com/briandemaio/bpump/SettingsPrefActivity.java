@@ -36,19 +36,19 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_main);
 
             // gallery EditText change listener
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_gallery_name)));
+            //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_gallery_name)));
 
             // notification preference change listener
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));
 
             // feedback preference click listener
-            Preference myPref = findPreference(getString(R.string.key_send_feedback));
+            /*Preference myPref = findPreference(getString(R.string.key_send_feedback));
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     sendFeedback(getActivity());
                     return true;
                 }
-            });
+            });*/
         }
     }
 
@@ -140,7 +140,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         }
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc822");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@androidhive.info"});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"bdemaio1@gmail.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Query from android app");
         intent.putExtra(Intent.EXTRA_TEXT, body);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
