@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setItemTimeAlarm(String leftOrRight) {
-        //int timeInterval = (int) ((mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis());
+        long timeInterval = (mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis();
         int broadcastId = 1;
         if(leftOrRight == "Left"){
             broadcastId = 2;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
                 (this, broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInterval
                 , notifyPendingIntent);
     }
 
@@ -119,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
             // Create the NotificationChannel with all the parameters.
             NotificationChannel notificationChannel = new NotificationChannel
                     (PRIMARY_CHANNEL_ID,
-                            "Item Cleaning Notification",
+                            "Pump Notification",
                             NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
             notificationChannel.setDescription
-                    ("Notifies user to clean");
+                    ("Notifies user to pump");
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
     }
