@@ -1,7 +1,14 @@
 package com.briandemaio.bpump;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,12 +18,21 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Notification channel ID.
+    private static final String PRIMARY_CHANNEL_ID =
+            "primary_notification_channel";
+
+    private SharedPreferences mPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        createNotificationChannel();
         showEditDialog();
     }
 
@@ -47,5 +63,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setItemTimeAlarm(String leftOrRight) {
+        int timeInterval = mPreferences.getInt("keys_num_1", 3);
+        Intent notifyIntent = new Intent(this, AlarmReceiver.class);
+        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, leftOrRight);
+        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to pump "+leftOrRight);
+        PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
+                (this, timeInterval, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInterval
+                , notifyPendingIntent);
+    }
+
+    /**
+     * Creates a Notification channel, for OREO and higher.
+     */
+    public void createNotificationChannel() {
+
+        // Create a notification manager object.
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        // Notification channels are only available in OREO and higher.
+        // So, add a check on SDK version.
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.O) {
+
+            // Create the NotificationChannel with all the parameters.
+            NotificationChannel notificationChannel = new NotificationChannel
+                    (PRIMARY_CHANNEL_ID,
+                            "Item Cleaning Notification",
+                            NotificationManager.IMPORTANCE_HIGH);
+
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setDescription
+                    ("Notifies user to clean");
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
     }
 }
