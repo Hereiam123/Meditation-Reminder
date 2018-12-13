@@ -86,20 +86,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setItemTimeAlarm(String leftOrRight) {
-        int timeInterval = (int) ((mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis());
-        long broadcastId =  System.currentTimeMillis() + 2000;
+        //int timeInterval = (int) ((mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis());
+        int broadcastId = 1;
         if(leftOrRight == "Left"){
-            broadcastId = broadcastId + 3000;
+            broadcastId = 2;
         }
-        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+ " on id "+broadcastId,
+        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" on id "+broadcastId,
                 Toast.LENGTH_LONG).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to pump "+leftOrRight);
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
-                (this, (int) broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                (this, broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, (long) broadcastId
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000
                 , notifyPendingIntent);
     }
 

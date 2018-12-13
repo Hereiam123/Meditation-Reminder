@@ -31,7 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent contentPendingIntent = PendingIntent.getActivity
                 (context, mId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_baby_small)
+                .setSmallIcon(R.drawable.ic_duck_and_bottle_small)
                 .setContentTitle("Reminder to Pump")
                 .setContentText("A Reminder that you should pump "+ mName + " soon")
                 .setContentIntent(contentPendingIntent)
