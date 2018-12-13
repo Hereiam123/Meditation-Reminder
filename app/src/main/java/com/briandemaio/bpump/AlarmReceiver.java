@@ -21,7 +21,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         mNotificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-         mId = intent.getIntExtra(NOTIFICATION_ID, 0);
+         mId = intent.getIntExtra(NOTIFICATION_ID, 1);
          mName = intent.getStringExtra(NOTIFICATION);
         deliverNotification(context);
     }
@@ -33,7 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_baby_small)
                 .setContentTitle("Reminder to Pump")
-                .setContentText("A Reminder that you should pump soon")
+                .setContentText("A Reminder that you should pump "+ mName + " soon")
                 .setContentIntent(contentPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)

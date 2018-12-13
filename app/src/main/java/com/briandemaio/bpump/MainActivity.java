@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,9 +33,27 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Button left = findViewById(R.id.button2);
+        Button right = findViewById(R.id.button1);
+
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         createNotificationChannel();
         showEditDialog();
+
+
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setItemTimeAlarm("Left");
+            }
+        });
+
+        right.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                setItemTimeAlarm("Right");
+            }
+        });
     }
 
     private void showEditDialog() {
@@ -66,14 +86,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setItemTimeAlarm(String leftOrRight) {
-        int timeInterval = mPreferences.getInt("keys_num_1", 3);
+        int timeInterval = (int) ((mPreferences.getInt("keys_num_1", 3) * 3600000)+ System.currentTimeMillis());
+        long broadcastId =  System.currentTimeMillis() + 2000;
+        if(leftOrRight == "Left"){
+            broadcastId = broadcastId + 3000;
+        }
+        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+ " on id "+broadcastId,
+                Toast.LENGTH_LONG).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
-        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, leftOrRight);
+        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to pump "+leftOrRight);
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
-                (this, timeInterval, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                (this, (int) broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInterval
+        alarmManager.set(AlarmManager.RTC_WAKEUP, (long) broadcastId
                 , notifyPendingIntent);
     }
 
