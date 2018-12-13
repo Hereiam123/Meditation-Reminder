@@ -25,6 +25,11 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
         </activity>
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+        </receiver>
     </application>
 
 </manifest>

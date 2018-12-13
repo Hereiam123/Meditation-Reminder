@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">How Often To - Pump Breast Milk</string>
+    <string name="app_name">How Often To - PB Milk</string>
     <string name="action_settings">Settings</string>
     <string name="first_time_recommend_text">It is recommended that you pump 8-10 times within a 24 hour period. This app will calculate based off those numbers, but we allow users to choose their own preferences in the options menu. Please conside creating your own timing interval.</string>
     <string name="title_activity_settings">Settings</string>
