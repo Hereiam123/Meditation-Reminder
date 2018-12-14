@@ -62,7 +62,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                        .getInt(preference.getKey(), 0));
     }
 
     /**
