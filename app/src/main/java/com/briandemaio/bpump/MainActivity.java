@@ -116,9 +116,12 @@ public class MainActivity extends AppCompatActivity {
         int prefTime= mPreferences.getInt("num_1", 3);
         long timeInterval  = (prefTime * 3600000);
         int broadcastId = 1;
+
         if(leftOrRight == "Left"){
             broadcastId = 2;
+            prefTime= mPreferences.getInt("num_2", 3);
         }
+
         Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" Breast, for "+
                        prefTime + " hours",
                 Toast.LENGTH_SHORT).show();

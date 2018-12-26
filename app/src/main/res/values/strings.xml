@@ -18,24 +18,16 @@
     <string name="slide_1_desc">How Often To - Pump Breast Milk</string>
 
     <string name="slide_2_title">Timer Settings</string>
-    <string name="slide_2_desc">There are options to set timers for either the Left or Right breast</string>
+    <string name="slide_2_desc">The buttons on the main screen set timers for either the Left or Right breast</string>
 
     <string name="slide_3_title">Edit Interval Settings</string>
-    <string name="slide_3_desc">The Settings options will allow you to set a custom interval</string>
+    <string name="slide_3_desc">The Settings options will allow you to set a custom interval (in hours)</string>
 
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
 
-    <!--
-    <string name="pref_title_notifications">Notifications</string>
-    <string name="summary_choose_ringtone">Choose notification sound</string>
-    <string name="title_new_notification_sound">New message notification</string>
-    <string name="title_vibrate">Vibrate</string>
-    <string name="summary_vibrate">Vibrate on new notification</string>
-    <string name="notifications_new_message">notifications_new_message</string>
-    <string name="key_notifications_new_message_ringtone">key_notifications_new_message_ringtone</string>
-    <string name="key_vibrate">key_vibrate</string>-->
     <string name="keys_num_1">num_1</string>
+    <string name="keys_num_2">num_2</string>
     <string name="right_breast_not_set">Right Breast Not Set</string>
     <string name="left_breast_not_set">Left Breast Not Set</string>
 </resources>
