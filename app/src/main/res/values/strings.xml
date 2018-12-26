@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">How Often To - Pump Breast Milk</string>
     <string name="action_settings">Settings</string>
-    <string name="first_time_recommend_text">It is recommended that you pump 8-10 times within a 24 hour period. This app will calculate based off those numbers, but we allow users to choose their own preferences in the options menu. Please conside creating your own timing interval.</string>
+    <string name="first_time_recommend_text">It is recommended that you pump 8-10 times within a 24 hour period.
+        This app will calculate based off those numbers, but we allow users to choose their own preferences in the options menu.
+        Please consider creating your own timing interval.</string>
     <string name="title_activity_settings">Settings</string>
     <string name="first_time_dialog_ok_button">OK</string>
 
@@ -34,4 +36,6 @@
     <string name="key_notifications_new_message_ringtone">key_notifications_new_message_ringtone</string>
     <string name="key_vibrate">key_vibrate</string>-->
     <string name="keys_num_1">num_1</string>
+    <string name="right_breast_not_set">Right Breast Not Set</string>
+    <string name="left_breast_not_set">Left Breast Not Set</string>
 </resources>

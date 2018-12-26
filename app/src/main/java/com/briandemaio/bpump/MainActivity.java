@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final int sdk = Build.VERSION.SDK_INT;
+        if(sdk<Build.VERSION_CODES.JELLY_BEAN){
+
+        }
+
         final Button left = findViewById(R.id.button2);
         final Button right = findViewById(R.id.button1);
 
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     cancelTimeAlarm("Left");
-                    left.setText("Left Breast Timer Not Set");
+                    left.setText("Left Timer Not Set");
                     isLeftSet=false;
                 }
             }
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     cancelTimeAlarm("Right");
-                    right.setText("Right Breast Timer Not Set");
+                    right.setText("Right Timer Not Set");
                     isRightSet=false;
                 }
             }
