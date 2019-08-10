@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name=".BackgroundSound" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2580444339985264~4603320181"/>
@@ -42,5 +43,5 @@
             android:exported="false">
         </receiver>
     </application>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 </manifest>

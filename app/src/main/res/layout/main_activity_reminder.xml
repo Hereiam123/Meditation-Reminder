@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/ic_duck_and_bottle"/>
+        app:srcCompat="@drawable/splash"/>
 
     <TextView
         android:id="@+id/first_time_recommend_text"

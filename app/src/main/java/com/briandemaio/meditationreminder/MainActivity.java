@@ -96,11 +96,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        startService(new Intent(MainActivity.this, BackgroundSound.class));
+
         MobileAds.initialize(this, "ca-app-pub-2580444339985264~4603320181");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
+
+    /*@Override
+    public void onResume() {
+        super.onResume();
+        mBackgroundSound.execute();
+    }*/
+
+    /*@Override
+    public void onPause(){
+        super.onPause();
+        stopService(new Intent(MainActivity.this, BackgroundSound.class));
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        stopService(new Intent(MainActivity.this, BackgroundSound.class));
+    }*/
 
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
