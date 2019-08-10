@@ -6,7 +6,6 @@
     <item android:drawable="@android:color/holo_red_light" />
     <!-- Your product logo - 144dp color version of your app icon -->
     <item>
-        <bitmap
-            android:src="@drawable/baby_and_woman_hug" />
+        <bitmap android:src="@drawable/splash"/>
     </item>
 </layer-list>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory>
-        <com.briandemaio.bpump.NumberPickerPreference
+        <com.briandemaio.meditationreminder.NumberPickerPreference
             android:defaultValue="3"
             android:key="@string/keys_num_1"
             android:title="Right Breast Reminder Time Length (hrs)" />
-        <com.briandemaio.bpump.NumberPickerPreference
+        <com.briandemaio.meditationreminder.NumberPickerPreference
             android:defaultValue="3"
             android:key="@string/keys_num_2"
             android:title="Left Breast Reminder Time Length (hrs)" />
