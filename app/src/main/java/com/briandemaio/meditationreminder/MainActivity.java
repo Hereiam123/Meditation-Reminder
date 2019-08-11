@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private CountDownTimer progressBarCountdown;
+    private Button meditate;
+    private TextView progressTimer;
 
     // Notification channel ID.
     public static final String PRIMARY_CHANNEL_ID =
@@ -54,9 +57,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Button meditate = findViewById(R.id.meditate);
+        meditate = findViewById(R.id.meditate);
         final Button musicStartStop = findViewById(R.id.music);
         progressBar = findViewById(R.id.progressBar);
+        progressTimer = findViewById(R.id.progressTime);
 
         //Get settings values
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     meditate.setText(R.string.meditation_timer_not_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
                     progressBarCountdown.cancel();
+                    progressStatus=0;
                     progressBar.setProgress(0);
                 }
                 isMeditating = !isMeditating;
@@ -136,11 +141,14 @@ public class MainActivity extends AppCompatActivity {
                 progressStatus+=1;
                 Log.w("Log_tag:","The progress " + progressStatus);
                 progressBar.setProgress((int)progressStatus*100/(meditationLength/1000));
+                progressTimer.setText((millisUntilFinished/1000)+" seconds left!");
             }
 
             @Override
             public void onFinish() {
                 Log.w("Log_tag:","The progress is finished");
+                meditate.setText(R.string.meditation_timer_not_set);
+                isMeditating = !isMeditating;
             }
         };
     }
