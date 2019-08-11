@@ -1,27 +1,21 @@
 package com.briandemaio.meditationreminder;
 
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 import android.view.MenuItem;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity {
-    //private static final String TAG = SettingsPrefActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // load settings fragment
+        // Load Settings Fragment
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
@@ -31,22 +25,10 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
-            // gallery EditText change listener
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.keys_num_1)));
+            //Meditation settings
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.meditation_length)));
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.keys_num_2)));
-
-            // notification preference change listener
-            //bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));
-
-            // feedback preference click listener
-            /*Preference myPref = findPreference(getString(R.string.key_send_feedback));
-            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    sendFeedback(getActivity());
-                    return true;
-                }
-            });*/
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.meditation_timer)));
         }
     }
 
@@ -60,7 +42,6 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
@@ -88,30 +69,10 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        //preference.setSummary(R.string.summary_choose_ringtone);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
-            } else if (preference instanceof EditTextPreference) {
+            }
+            else if (preference instanceof EditTextPreference) {
                 if (preference.getKey().equals("key_gallery_name")) {
+
                     // update the changed gallery name to summary filed
                     preference.setSummary(stringValue);
                 }

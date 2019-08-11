@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mPreferences;
     private boolean isMeditating;
+    private boolean isMusicPlaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Button meditate = findViewById(R.id.button1);
+        final Button meditate = findViewById(R.id.meditate);
+        final Button musicStartStop = findViewById(R.id.music);
 
         //Get settings values
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -68,19 +70,32 @@ public class MainActivity extends AppCompatActivity {
                     setTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
-                    isMeditating=true;
                 }
                 else{
                     cancelTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_not_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
-                    isMeditating=false;
                 }
+                isMeditating = !isMeditating;
             }
         });
 
         //Music in background Service
-        startService(new Intent(MainActivity.this, BackgroundSound.class));
+        musicStartStop.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(!isMusicPlaying) {
+                    startService(new Intent(MainActivity.this, BackgroundSound.class));
+                    musicStartStop.setText(R.string.music_unset);
+                }
+                else{
+                    stopService(new Intent(MainActivity.this, BackgroundSound.class));
+                    musicStartStop.setText(R.string.music);
+
+                }
+                isMusicPlaying = !isMusicPlaying;
+            }
+        });
 
         //Google ads
         MobileAds.initialize(this, "ca-app-pub-2580444339985264~4603320181");
@@ -88,24 +103,6 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
-
-    /*@Override
-    public void onResume() {
-        super.onResume();
-        mBackgroundSound.execute();
-    }*/
-
-    /*@Override
-    public void onPause(){
-        super.onPause();
-        stopService(new Intent(MainActivity.this, BackgroundSound.class));
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        stopService(new Intent(MainActivity.this, BackgroundSound.class));
-    }*/
 
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
@@ -136,22 +133,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setTimeAlarm(String leftOrRight) {
-        int prefTime= mPreferences.getInt("num_1", 3);
+    public void setTimeAlarm(String setting) {
+        //Setting the time alarm for how long a notification should come up for a reminder (Set by hours)
+        int prefTime= mPreferences.getInt("Meditation Timer", 24);
         long timeInterval  = (prefTime * 3600000);
+
+        //Check which broadcast notification ID you are setting
         int broadcastId = 1;
 
-        if(leftOrRight.equals("Left")){
+        /*if(leftOrRight.equals("Left")){
             broadcastId = 2;
             prefTime= mPreferences.getInt("num_2", 3);
-        }
+        }*/
 
-        Toast.makeText(getApplicationContext(),"Set timer for "+leftOrRight+" Breast, for "+
-                       prefTime + " hours",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Set timer for meditation session",Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
-        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to pump "+leftOrRight);
+        notifyIntent.putExtra(AlarmReceiver.NOTIFICATION, "A reminder that you set a timer to meditate.");
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
                 (this, broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -160,12 +158,14 @@ public class MainActivity extends AppCompatActivity {
                         System.currentTimeMillis() + timeInterval, timeInterval, notifyPendingIntent);
     }
 
-    public void cancelTimeAlarm(String leftOrRight) {
+    public void cancelTimeAlarm(String setting) {
+
+        //Check which broadcast notification ID you are cancelling
         int broadcastId = 1;
-        if(leftOrRight.equals("Left")){
+        /*if(leftOrRight.equals("Left")){
             broadcastId = 2;
-        }
-        Toast.makeText(getApplicationContext(),"Canceled timer for "+leftOrRight+" Breast",
+        }*/
+        Toast.makeText(getApplicationContext(),"Canceled timer for meditation reminder",
                 Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
@@ -192,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
             // Create the NotificationChannel with all the parameters.
             NotificationChannel notificationChannel = new NotificationChannel
                     (PRIMARY_CHANNEL_ID,
-                            "Pump Breast Milk Notification",
+                            "Meditation Notification",
                             NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
             notificationChannel.setDescription
-                    ("Notifies user to pump breat milk");
+                    ("Notifies user to meditate.");
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
     }
