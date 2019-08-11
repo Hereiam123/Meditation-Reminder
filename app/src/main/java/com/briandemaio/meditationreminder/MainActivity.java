@@ -27,77 +27,62 @@ public class MainActivity extends AppCompatActivity {
     private AdView mAdView;
 
     // Notification channel ID.
-    private static final String PRIMARY_CHANNEL_ID =
+    public static final String PRIMARY_CHANNEL_ID =
             "primary_notification_channel";
 
-    private SharedPreferences mPreferences;
+    private final String MEDITATION_SET = "Set Meditation Timer";
+    private final String ALARM_CHANNEL = "Meditate";
 
-    private boolean isLeftSet;
-    private boolean isRightSet;
+    private SharedPreferences mPreferences;
+    private boolean isMeditating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Button left = findViewById(R.id.button2);
-        final Button right = findViewById(R.id.button1);
+        final Button meditate = findViewById(R.id.button1);
 
+        //Get settings values
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(mPreferences.getBoolean("Set Left Timer", false)){
-            left.setText("Left Breast Timer Set");
-            isLeftSet=true;
+        //Check if meditation session is currently set
+        if(mPreferences.getBoolean( MEDITATION_SET, false)){
+            meditate.setText(R.string.meditation_timer_set);
+            isMeditating=true;
         }
 
-        if(mPreferences.getBoolean("Set Right Timer", false)){
-            right.setText("Right Breast Timer Set");
-            isRightSet=true;
-        }
-
+        //Start notification channel service
         createNotificationChannel();
+
+        //Show dialog box to remind user of app options
         showEditDialog();
 
-        left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!isLeftSet) {
-                    setTimeAlarm("Left");
-                    left.setText("Left Breast Timer Set");
-                    mPreferences.edit().putBoolean("Set Left Timer", true).apply();
-                    isLeftSet=true;
-                }
-                else{
-                    cancelTimeAlarm("Left");
-                    left.setText("Left Timer Not Set");
-                    mPreferences.edit().putBoolean("Set Left Timer", false).apply();
-                    isLeftSet=false;
-                }
-            }
-        });
-
-        right.setOnClickListener(new View.OnClickListener(){
+        //Toggle meditation session status
+        meditate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                if(!isRightSet) {
-                    setTimeAlarm("Right");
-                    right.setText("Right Breast Timer Set");
-                    mPreferences.edit().putBoolean("Set Right Timer", true).apply();
-                    isRightSet=true;
+                if(!isMeditating) {
+                    setTimeAlarm(ALARM_CHANNEL);
+                    meditate.setText(R.string.meditation_timer_set);
+                    mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
+                    isMeditating=true;
                 }
                 else{
-                    cancelTimeAlarm("Right");
-                    right.setText("Right Timer Not Set");
-                    mPreferences.edit().putBoolean("Set Right Timer", false).apply();
-                    isRightSet=false;
+                    cancelTimeAlarm(ALARM_CHANNEL);
+                    meditate.setText(R.string.meditation_timer_not_set);
+                    mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
+                    isMeditating=false;
                 }
             }
         });
 
+        //Music in background Service
         startService(new Intent(MainActivity.this, BackgroundSound.class));
 
+        //Google ads
         MobileAds.initialize(this, "ca-app-pub-2580444339985264~4603320181");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -156,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         long timeInterval  = (prefTime * 3600000);
         int broadcastId = 1;
 
-        if(leftOrRight == "Left"){
+        if(leftOrRight.equals("Left")){
             broadcastId = 2;
             prefTime= mPreferences.getInt("num_2", 3);
         }
@@ -177,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void cancelTimeAlarm(String leftOrRight) {
         int broadcastId = 1;
-        if(leftOrRight == "Left"){
+        if(leftOrRight.equals("Left")){
             broadcastId = 2;
         }
         Toast.makeText(getApplicationContext(),"Canceled timer for "+leftOrRight+" Breast",

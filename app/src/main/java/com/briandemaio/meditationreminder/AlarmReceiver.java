@@ -8,14 +8,11 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 
 public class AlarmReceiver extends BroadcastReceiver {
-
     private NotificationManager mNotificationManager;
     public static String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";
     private int mId;
     private String mMessage;
-    private static final String PRIMARY_CHANNEL_ID =
-            "primary_notification_channel";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -30,8 +27,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent contentIntent = new Intent(context, MainActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity
                 (context, mId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-                .setSmallIcon(R.drawable.splash)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.PRIMARY_CHANNEL_ID)
+                .setSmallIcon(R.drawable.mindfulness_practice)
                 .setContentText(mMessage)
                 .setContentIntent(contentPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
