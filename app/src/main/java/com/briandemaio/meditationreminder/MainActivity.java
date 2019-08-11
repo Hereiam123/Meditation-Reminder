@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
             isMeditating=true;
         }
 
-        progressBarCountdown = ProgressBarCountdown();
-
         //Start notification channel service
         createNotificationChannel();
 
@@ -84,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 if(!isMeditating) {
+                    progressBarCountdown = ProgressBarCountdown();
                     setTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
@@ -96,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
                     progressBarCountdown.cancel();
                     progressStatus=0;
                     progressBar.setProgress(0);
+                    progressTimer.setText("Start Meditation Session");
+
                 }
                 isMeditating = !isMeditating;
             }
@@ -131,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
         editNameDialogFragment.show(fm, "fragment_edit_name");
     }
 
+    //Countdown timer that updates progress bar on page
     private CountDownTimer ProgressBarCountdown() {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         int meditationLengthStored = mPreferences.getInt(MEDITATION_LENGTH, 15);
         final int meditationLength = (meditationLengthStored * (60 * 1000));
         //Convert meditation length to seconds
@@ -148,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 Log.w("Log_tag:","The progress is finished");
                 meditate.setText(R.string.meditation_timer_not_set);
+                progressTimer.setText("You are finished for this session!");
                 isMeditating = !isMeditating;
             }
         };
