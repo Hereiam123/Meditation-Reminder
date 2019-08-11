@@ -75,14 +75,16 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         //Show dialog box to remind user of app options
-        showEditDialog();
+        showStartupDialog();
 
         //Toggle meditation session status
         meditate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 if(!isMeditating) {
+                    progressStatus=0;
                     progressBarCountdown = ProgressBarCountdown();
+                    progressBar.setProgress(0);
                     setTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
@@ -92,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
                     cancelTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_not_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
-                    progressBarCountdown.cancel();
+                    if(progressBarCountdown!=null) {
+                        progressBarCountdown.cancel();
+                    }
                     progressStatus=0;
                     progressBar.setProgress(0);
                     progressTimer.setText("Start Meditation Session");
@@ -126,10 +130,16 @@ public class MainActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-    private void showEditDialog() {
+    private void showStartupDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        FirstTimeFragment editNameDialogFragment = FirstTimeFragment.newInstance("Some Title");
-        editNameDialogFragment.show(fm, "fragment_edit_name");
+        StartupFragment startupFragment = StartupFragment.newInstance("Some Title");
+        startupFragment.show(fm, "fragment_edit_name");
+    }
+
+    private void showAlarmDialog(){
+        FragmentManager fm = getSupportFragmentManager();
+        EndAlarmFragment stopAlarmFragment = EndAlarmFragment.newInstance("Some Title");
+        stopAlarmFragment.show(fm, "fragment_edit_name");
     }
 
     //Countdown timer that updates progress bar on page
@@ -142,17 +152,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 progressStatus+=1;
-                Log.w("Log_tag:","The progress " + progressStatus);
                 progressBar.setProgress((int)progressStatus*100/(meditationLength/1000));
                 progressTimer.setText((millisUntilFinished/1000)+" seconds left!");
             }
 
             @Override
             public void onFinish() {
-                Log.w("Log_tag:","The progress is finished");
                 meditate.setText(R.string.meditation_timer_not_set);
                 progressTimer.setText("You are finished for this session!");
                 isMeditating = !isMeditating;
+                showAlarmDialog();
             }
         };
     }

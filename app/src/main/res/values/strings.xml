@@ -10,6 +10,8 @@
     <string name="meditate">Start Meditation Session</string>
     <string name="music">Start Music</string>
     <string name="music_unset">Stop Music</string>
+    <string name="end_alarm">Session Ended! Hit Ok</string>
+    <string name="end_alarm_button">Ok</string>
 
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>

@@ -19,6 +19,7 @@ public class BackgroundSound extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer = MediaPlayer.create(this, R.raw.ambient_universe);
+        mediaPlayer.setLooping(true);
         mediaPlayer.start();
         return super.onStartCommand(intent, flags, startId);
     }

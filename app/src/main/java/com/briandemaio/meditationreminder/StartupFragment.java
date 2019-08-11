@@ -6,18 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-// ...
 
-public class FirstTimeFragment extends DialogFragment {
+public class StartupFragment extends DialogFragment {
 
-    public FirstTimeFragment() {
+    public StartupFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
 
-    public static FirstTimeFragment newInstance(String title) {
-        FirstTimeFragment frag = new FirstTimeFragment();
+    public static StartupFragment newInstance(String title) {
+        StartupFragment frag = new StartupFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         frag.setArguments(args);
