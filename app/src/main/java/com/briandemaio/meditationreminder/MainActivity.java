@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -25,6 +26,9 @@ import com.google.android.gms.ads.MobileAds;
 public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
+
+    private ProgressBar progressBar;
+    private int progressStatus = 0;
 
     // Notification channel ID.
     public static final String PRIMARY_CHANNEL_ID =
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Button meditate = findViewById(R.id.meditate);
         final Button musicStartStop = findViewById(R.id.music);
+        progressBar = findViewById(R.id.progressBar);
 
         //Get settings values
         mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
