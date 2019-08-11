@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private AdView mAdView;
 
     private ProgressBar progressBar;
-    private int progressStatus = 0;
+    private CountDownTimer progressBarCountdown;
 
     // Notification channel ID.
     public static final String PRIMARY_CHANNEL_ID =
@@ -36,10 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
     private final String MEDITATION_SET = "Set Meditation Timer";
     private final String ALARM_CHANNEL = "Meditate";
+    private final String MEDITATION_LENGTH = "Meditation Length";
 
     private SharedPreferences mPreferences;
     private boolean isMeditating;
     private boolean isMusicPlaying;
+
+    int progressStatus = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             isMeditating=true;
         }
 
+        progressBarCountdown = ProgressBarCountdown();
+
         //Start notification channel service
         createNotificationChannel();
 
@@ -75,11 +83,14 @@ public class MainActivity extends AppCompatActivity {
                     setTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
+                    progressBarCountdown.start();
                 }
                 else{
                     cancelTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_not_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
+                    progressBarCountdown.cancel();
+                    progressBar.setProgress(0);
                 }
                 isMeditating = !isMeditating;
             }
@@ -113,6 +124,25 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FirstTimeFragment editNameDialogFragment = FirstTimeFragment.newInstance("Some Title");
         editNameDialogFragment.show(fm, "fragment_edit_name");
+    }
+
+    private CountDownTimer ProgressBarCountdown() {
+        int meditationLengthStored = mPreferences.getInt(MEDITATION_LENGTH, 15);
+        final int meditationLength = (meditationLengthStored * (60 * 1000));
+        //Convert meditation length to seconds
+        return new CountDownTimer( meditationLength, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                progressStatus+=1;
+                Log.w("Log_tag:","The progress " + progressStatus);
+                progressBar.setProgress((int)progressStatus*100/(meditationLength/1000));
+            }
+
+            @Override
+            public void onFinish() {
+                Log.w("Log_tag:","The progress is finished");
+            }
+        };
     }
 
     @Override
