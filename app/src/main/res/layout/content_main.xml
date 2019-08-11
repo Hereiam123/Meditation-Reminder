@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/notificationToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="65dp"
+        android:text="Reminders?"
+        />
+
     <TextView
         android:id="@+id/progressTime"
         android:layout_width="200dp"
@@ -11,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:text="Start Session Below!" />
 
