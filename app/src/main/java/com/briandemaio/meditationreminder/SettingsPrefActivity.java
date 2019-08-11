@@ -6,10 +6,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.MenuItem;
-
-import java.sql.Time;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity {
 
@@ -116,7 +113,6 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             }
             else if (preference instanceof EditTextPreference) {
                 if (preference.getKey().equals("key_gallery_name")) {
-
                     // update the changed gallery name to summary filed
                     preference.setSummary(stringValue);
                 }
