@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory>
-        <com.briandemaio.meditationreminder.NumberPickerPreference
+        <com.briandemaio.meditationreminder.HourNumberPickerPreference
             android:defaultValue="3"
             android:key="@string/meditation_length"
             android:title="How many minutes to meditate for" />
