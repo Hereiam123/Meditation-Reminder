@@ -31,4 +31,5 @@
 
     <string name="meditation_length">Meditation Length</string>
     <string name="meditation_timer">Meditation Timer</string>
+    <string name="time_reminder">Time Reminder</string>
 </resources>

@@ -6,7 +6,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
+
+import java.sql.Time;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity {
 
@@ -29,6 +32,8 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.meditation_length)));
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.meditation_timer)));
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.time_reminder)));
         }
     }
 
@@ -42,10 +47,18 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
-                PreferenceManager
-                        .getDefaultSharedPreferences(preference.getContext())
-                        .getInt(preference.getKey(), 0));
+        if (preference instanceof TimePreference) {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), "8:00"));
+        }
+        else {
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getInt(preference.getKey(), 0));
+        }
     }
 
     /**
@@ -69,6 +82,37 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                                 ? listPreference.getEntries()[index]
                                 : null);
 
+            }
+            else if (preference instanceof TimePreference) {
+                // For list preferences, look up the correct display value in
+                // the preference's 'entries' list.
+                String[] time = stringValue.split(":");
+                String hour = time[0];
+                String minute = time[1];
+                String timeOfDay;
+
+                //Need to parse out hour and minute values, as what is returned from the TimePreference
+                //is military time, or minute values are only single digits if 1-9
+                if(Integer.parseInt(hour)>12){
+                    hour = String.valueOf(Integer.parseInt(hour) - 12);
+                    timeOfDay = "PM";
+                }
+                else if(Integer.parseInt(hour)==12 || Integer.parseInt(hour)==0){
+                    hour = "12";
+                    timeOfDay = "PM";
+                    if(Integer.parseInt(hour)==0){
+                        timeOfDay="AM";
+                    }
+                }
+                else{
+                    timeOfDay = "AM";
+                }
+
+                if(Integer.parseInt(minute)<10){
+                    minute = "0"+minute;
+                }
+
+                preference.setSummary(hour+":"+minute+timeOfDay);
             }
             else if (preference instanceof EditTextPreference) {
                 if (preference.getKey().equals("key_gallery_name")) {

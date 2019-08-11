@@ -9,5 +9,8 @@
             android:defaultValue="24"
             android:key="@string/meditation_timer"
             android:title="How long until next meditation session (in hours)" />
+        <com.briandemaio.meditationreminder.TimePreference
+            android:key="@string/time_reminder"
+            android:title="Pick time of day for meditation reminders"/>
     </PreferenceCategory>
 </PreferenceScreen>
