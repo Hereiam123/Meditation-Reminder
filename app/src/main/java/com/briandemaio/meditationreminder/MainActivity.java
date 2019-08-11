@@ -10,15 +10,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
+
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,14 +37,18 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer progressBarCountdown;
     private Button meditate;
     private TextView progressTimer;
+    private SwitchCompat reminders;
+    private ImageButton alarm;
 
     // Notification channel ID.
     public static final String PRIMARY_CHANNEL_ID =
             "primary_notification_channel";
 
     private final String MEDITATION_SET = "Set Meditation Timer";
-    private final String ALARM_CHANNEL = "Meditate";
     private final String MEDITATION_LENGTH = "Meditation Length";
+    private final String REMINDER_SET = "Reminder Set";
+    private final int MEDITATION_INTERVAL = 1;
+    private final int MEDITATION_DAY_TIME = 2;
 
     private SharedPreferences mPreferences;
     private boolean isMeditating;
@@ -57,18 +63,36 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Get Shared preference settings
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Get buttons from layout view
         meditate = findViewById(R.id.meditate);
         final Button musicStartStop = findViewById(R.id.music);
         progressBar = findViewById(R.id.progressBar);
         progressTimer = findViewById(R.id.progressTime);
+        reminders = findViewById(R.id.notificationToggle);
+        alarm = findViewById(R.id.alarm);
 
-        //Get settings values
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Check if reminders are enabled, and set reminders button checked status
+        if(mPreferences.getBoolean(REMINDER_SET, false)){
+            reminders.setChecked(true);
+        }
+        else{
+            reminders.setChecked(false);
+        }
 
-        //Check if meditation session is currently set
-        if(mPreferences.getBoolean( MEDITATION_SET, false)){
-            meditate.setText(R.string.meditation_timer_set);
-            isMeditating=true;
+        //Check if meditation session is currently set, from savedInstanceState
+        if(savedInstanceState != null) {
+            if (savedInstanceState.getBoolean(MEDITATION_SET, false)) {
+                savedInstanceState.putBoolean(MEDITATION_SET, true);
+                meditate.setText(R.string.meditation_timer_set);
+                isMeditating = true;
+            } else {
+                savedInstanceState.putBoolean(MEDITATION_SET, false);
+                meditate.setText(R.string.meditation_timer_not_set);
+                isMeditating = false;
+            }
         }
 
         //Start notification channel service
@@ -81,24 +105,20 @@ public class MainActivity extends AppCompatActivity {
         meditate.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                progressStatus=0;
+                progressBar.setProgress(0);
                 if(!isMeditating) {
-                    progressStatus=0;
                     progressBarCountdown = ProgressBarCountdown();
-                    progressBar.setProgress(0);
-                    setTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
                     progressBarCountdown.start();
                 }
                 else{
-                    cancelTimeAlarm(ALARM_CHANNEL);
                     meditate.setText(R.string.meditation_timer_not_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, false).apply();
                     if(progressBarCountdown!=null) {
                         progressBarCountdown.cancel();
                     }
-                    progressStatus=0;
-                    progressBar.setProgress(0);
                     progressTimer.setText("Start Meditation Session");
 
                 }
@@ -106,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Music in background Service
+        //Music in background Service Switch
         musicStartStop.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -123,6 +143,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        alarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarm.setVisibility(View.INVISIBLE);
+                stopService(new Intent(MainActivity.this, BackgroundSound.class));
+            }
+        });
+
+        //Notification Switch
+        reminders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(reminders.isChecked()){
+                    setTimeAlarm(MEDITATION_DAY_TIME);
+                    setTimeAlarm(MEDITATION_INTERVAL);
+                    mPreferences.edit().putBoolean(REMINDER_SET, true).apply();
+                }
+                else{
+                    cancelTimeAlarm(MEDITATION_DAY_TIME);
+                    cancelTimeAlarm(MEDITATION_INTERVAL);
+                    mPreferences.edit().putBoolean(REMINDER_SET, false).apply();
+                }
+            }
+        });
+
         //Google ads
         MobileAds.initialize(this, "ca-app-pub-2580444339985264~4603320181");
         mAdView = findViewById(R.id.adView);
@@ -130,16 +175,16 @@ public class MainActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
+    @Override
+    protected void onDestroy(){
+        mPreferences.edit().putBoolean(MEDITATION_SET, false).commit();
+        super.onDestroy();
+    }
+
     private void showStartupDialog() {
         FragmentManager fm = getSupportFragmentManager();
         StartupFragment startupFragment = StartupFragment.newInstance("Some Title");
         startupFragment.show(fm, "fragment_edit_name");
-    }
-
-    private void showAlarmDialog(){
-        FragmentManager fm = getSupportFragmentManager();
-        EndAlarmFragment stopAlarmFragment = EndAlarmFragment.newInstance("Some Title");
-        stopAlarmFragment.show(fm, "fragment_edit_name");
     }
 
     //Countdown timer that updates progress bar on page
@@ -160,8 +205,9 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 meditate.setText(R.string.meditation_timer_not_set);
                 progressTimer.setText("You are finished for this session!");
+                alarm.setVisibility(View.VISIBLE);
+                startService(new Intent(MainActivity.this, BackgroundSound.class));
                 isMeditating = !isMeditating;
-                showAlarmDialog();
             }
         };
     }
@@ -170,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        //MenuItem item = menu.findItem(R.id.switchForActionBar);
+        //item.setActionView(R.layout.switch_layout);
         return true;
     }
 
@@ -189,19 +237,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setTimeAlarm(String setting) {
+    public void setTimeAlarm(int broadcastId) {
         //Setting the time alarm for how long a notification should come up for a reminder (Set by hours)
         int prefTime= mPreferences.getInt("Meditation Timer", 24);
         long timeInterval  = (prefTime * 3600000);
-
-        //Check which broadcast notification ID you are setting
-        int broadcastId = 1;
-
-        /*if(leftOrRight.equals("Left")){
-            broadcastId = 2;
-            prefTime= mPreferences.getInt("num_2", 3);
-        }*/
-
         Toast.makeText(getApplicationContext(),"Set timer for meditation session",Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
@@ -214,13 +253,8 @@ public class MainActivity extends AppCompatActivity {
                         System.currentTimeMillis() + timeInterval, timeInterval, notifyPendingIntent);
     }
 
-    public void cancelTimeAlarm(String setting) {
-
+    public void cancelTimeAlarm(int broadcastId) {
         //Check which broadcast notification ID you are cancelling
-        int broadcastId = 1;
-        /*if(leftOrRight.equals("Left")){
-            broadcastId = 2;
-        }*/
         Toast.makeText(getApplicationContext(),"Canceled timer for meditation reminder",
                 Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
