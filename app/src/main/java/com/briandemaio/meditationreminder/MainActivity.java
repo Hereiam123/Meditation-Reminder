@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alarm.setVisibility(View.INVISIBLE);
-                stopService(new Intent(MainActivity.this, BackgroundSound.class));
+                stopService(new Intent(MainActivity.this, AlarmSound.class));
             }
         });
 
@@ -175,12 +175,6 @@ public class MainActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);
     }
 
-    @Override
-    protected void onDestroy(){
-        mPreferences.edit().putBoolean(MEDITATION_SET, false).commit();
-        super.onDestroy();
-    }
-
     private void showStartupDialog() {
         FragmentManager fm = getSupportFragmentManager();
         StartupFragment startupFragment = StartupFragment.newInstance("Some Title");
@@ -193,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         int meditationLengthStored = mPreferences.getInt(MEDITATION_LENGTH, 15);
         final int meditationLength = (meditationLengthStored * (60 * 1000));
         //Convert meditation length to seconds
-        return new CountDownTimer( meditationLength, 1000) {
+        return new CountDownTimer( /*meditationLength*/ 2000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 progressStatus+=1;
@@ -205,8 +199,11 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 meditate.setText(R.string.meditation_timer_not_set);
                 progressTimer.setText("You are finished for this session!");
+
+                //Show and play alarm with AlarmSound service
                 alarm.setVisibility(View.VISIBLE);
-                startService(new Intent(MainActivity.this, BackgroundSound.class));
+                startService(new Intent(MainActivity.this, AlarmSound.class));
+
                 isMeditating = !isMeditating;
             }
         };

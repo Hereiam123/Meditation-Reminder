@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".BackgroundSound" />
+        <service android:name=".AlarmSound" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2580444339985264~4603320181"/>
