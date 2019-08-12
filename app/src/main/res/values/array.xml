@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="music_choices">
+        <item>Ambient Universe</item>
+        <item>Deep Meditation</item>
+        <item>Lucid Tones</item>
+        <item>Piano Lullaby</item>
+    </string-array>
+</resources>
