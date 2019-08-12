@@ -12,5 +12,13 @@
         <com.briandemaio.meditationreminder.TimePreference
             android:key="@string/time_reminder"
             android:title="Pick time of day for meditation reminders"/>
+        <ListPreference
+            android:key="@string/music_preference"
+            android:title="Background Music"
+            android:defaultValue="Ambient Universe"
+            android:entries="@array/music_choices"
+            android:entryValues="@array/music_choices"
+            android:summary="Select a track for background play"
+            />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -49,12 +49,13 @@ public class MainActivity extends AppCompatActivity {
     private final String REMINDER_SET = "Reminder Set";
     private final int MEDITATION_INTERVAL = 1;
     private final int MEDITATION_DAY_TIME = 2;
+    private final String MUSIC_CHOICE = "Music Preference";
 
     private SharedPreferences mPreferences;
     private boolean isMeditating;
     private boolean isMusicPlaying;
-
-    int progressStatus = 0;
+    private Intent musicIntent;
+    private int progressStatus = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 if(!isMusicPlaying) {
-                    startService(new Intent(MainActivity.this, BackgroundSound.class));
+                    musicIntent = new Intent(MainActivity.this, BackgroundSound.class);
+                    musicIntent.putExtra("Music Choice", mPreferences.getString(MUSIC_CHOICE, "Ambient Universe"));
+                    startService(musicIntent);
                     musicStartStop.setText(R.string.music_unset);
                 }
                 else{
@@ -143,11 +146,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Close alarm
         alarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alarm.setVisibility(View.INVISIBLE);
-                stopService(new Intent(MainActivity.this, AlarmSound.class));
+                musicIntent = new Intent(MainActivity.this, AlarmSound.class);
+                stopService(musicIntent);
             }
         });
 
@@ -203,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
                 //Show and play alarm with AlarmSound service
                 alarm.setVisibility(View.VISIBLE);
                 startService(new Intent(MainActivity.this, AlarmSound.class));
-
                 isMeditating = !isMeditating;
             }
         };

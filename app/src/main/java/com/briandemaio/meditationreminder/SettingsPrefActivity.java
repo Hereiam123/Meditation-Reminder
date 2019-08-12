@@ -31,6 +31,8 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.meditation_timer)));
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.time_reminder)));
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.music_preference)));
         }
     }
 
@@ -50,6 +52,13 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                             .getDefaultSharedPreferences(preference.getContext())
                             .getString(preference.getKey(), "8:00"));
         }
+        else if(preference instanceof ListPreference){
+            sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                    PreferenceManager
+                            .getDefaultSharedPreferences(preference.getContext())
+                            .getString(preference.getKey(), "Ambient Universe"));
+
+        }
         else {
             sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                     PreferenceManager
@@ -67,6 +76,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String stringValue = newValue.toString();
 
+            //Music selection preference, will need to adjust for more instances
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
@@ -78,7 +88,6 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
             }
             else if (preference instanceof TimePreference) {
                 // For list preferences, look up the correct display value in

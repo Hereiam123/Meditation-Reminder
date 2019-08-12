@@ -18,12 +18,31 @@ public class BackgroundSound extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mediaPlayer = MediaPlayer.create(this, R.raw.ambient_universe);
+        String audioChoice = intent.getStringExtra("Music Choice");
+
+        //Don't plan on adding more audio tracks right now, so...
+        switch (audioChoice) {
+            case "Ambient Universe":
+                mediaPlayer = MediaPlayer.create(this, R.raw.ambient_universe);
+                break;
+            case "Deep Meditation":
+                mediaPlayer = MediaPlayer.create(this, R.raw.deep_meditation_om);
+                break;
+            case "Lucid Tones":
+                mediaPlayer = MediaPlayer.create(this, R.raw.lucid_toads);
+                break;
+            case "Piano Lullaby":
+                mediaPlayer = MediaPlayer.create(this, R.raw.piano_lullabynowm);
+                break;
+            default:
+                mediaPlayer = MediaPlayer.create(this, R.raw.lucid_toads);
+                break;
+        }
+
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         return super.onStartCommand(intent, flags, startId);
     }
-
 
     @Override
     public boolean stopService(Intent name) {
@@ -36,6 +55,5 @@ public class BackgroundSound extends Service {
         mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
-
     }
 }
