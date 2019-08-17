@@ -7,7 +7,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class AlarmSound extends Service {
+public class AlarmSound extends Service implements MediaPlayer.OnPreparedListener {
     MediaPlayer mediaPlayer;
 
     @Nullable
@@ -19,8 +19,7 @@ public class AlarmSound extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer = MediaPlayer.create(this, R.raw.bell);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        mediaPlayer.setOnPreparedListener(this);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -37,5 +36,11 @@ public class AlarmSound extends Service {
         mediaPlayer.release();
         mediaPlayer = null;
 
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 }

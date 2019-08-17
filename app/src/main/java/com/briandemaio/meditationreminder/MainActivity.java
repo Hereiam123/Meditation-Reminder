@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private final String REMINDER_SET = "Reminder Set";
     private final int MEDITATION_INTERVAL = 1;
     private final int MEDITATION_DAY_TIME = 2;
+    private final int MEDITATION_IMMEDIATE_SESSION = 3;
     private final String MUSIC_CHOICE = "Music Preference";
 
     private SharedPreferences mPreferences;
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     meditate.setText(R.string.meditation_timer_set);
                     mPreferences.edit().putBoolean(MEDITATION_SET, true).apply();
                     progressBarCountdown.start();
+                    setTimeAlarm(MEDITATION_IMMEDIATE_SESSION);
                 }
                 else{
                     meditate.setText(R.string.meditation_timer_not_set);
@@ -121,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         progressBarCountdown.cancel();
                     }
                     progressTimer.setText("Start Meditation Session");
+                    cancelTimeAlarm(MEDITATION_IMMEDIATE_SESSION);
 
                 }
                 isMeditating = !isMeditating;
@@ -140,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                 else{
                     stopService(new Intent(MainActivity.this, BackgroundSound.class));
                     musicStartStop.setText(R.string.music);
-
                 }
                 isMusicPlaying = !isMusicPlaying;
             }
@@ -170,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     cancelTimeAlarm(MEDITATION_INTERVAL);
                     mPreferences.edit().putBoolean(REMINDER_SET, false).apply();
                 }
+
             }
         });
 
@@ -192,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         int meditationLengthStored = mPreferences.getInt(MEDITATION_LENGTH, 15);
         final int meditationLength = (meditationLengthStored * (60 * 1000));
         //Convert meditation length to seconds
-        return new CountDownTimer( /*meditationLength*/ 2000, 1000) {
+        return new CountDownTimer( meditationLength, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 progressStatus+=1;
@@ -239,9 +245,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setTimeAlarm(int broadcastId) {
-        //Setting the time alarm for how long a notification should come up for a reminder (Set by hours)
-        int prefTime= mPreferences.getInt("Meditation Timer", 24);
-        long timeInterval  = (prefTime * 3600000);
         Toast.makeText(getApplicationContext(),"Set timer for meditation session",Toast.LENGTH_SHORT).show();
         Intent notifyIntent = new Intent(this, AlarmReceiver.class);
         notifyIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, broadcastId);
@@ -249,9 +252,34 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
                 (this, broadcastId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating
-                (AlarmManager.RTC_WAKEUP,
-                        System.currentTimeMillis() + timeInterval, timeInterval, notifyPendingIntent);
+
+        int prefTime;
+        long timeInterval;
+       if(broadcastId==1){
+            prefTime= mPreferences.getInt("Meditation Timer", 24);
+            timeInterval  = (prefTime * 3600000);
+            alarmManager.setInexactRepeating
+                    (AlarmManager.RTC_WAKEUP,
+                            System.currentTimeMillis() + timeInterval, timeInterval, notifyPendingIntent);
+        }
+        else if(broadcastId==2){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            String time[]  = mPreferences.getString("Time Reminder", "8:00").split(":");
+            int hour = Integer.parseInt(time[0]);
+            int minute = Integer.parseInt(time[1]);
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(),
+                    1000 * 60 * 60 * 24, notifyPendingIntent);
+        }
+        else if(broadcastId==3){
+            prefTime= mPreferences.getInt("Meditation Length", 24);
+            timeInterval  = (System.currentTimeMillis() + prefTime * 6000);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()
+                    + prefTime*60*1000, notifyPendingIntent);
+
+        }
     }
 
     public void cancelTimeAlarm(int broadcastId) {

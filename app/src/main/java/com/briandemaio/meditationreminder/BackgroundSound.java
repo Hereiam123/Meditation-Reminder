@@ -7,7 +7,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class BackgroundSound extends Service {
+public class BackgroundSound extends Service implements MediaPlayer.OnPreparedListener{
     MediaPlayer mediaPlayer;
 
     @Nullable
@@ -39,8 +39,7 @@ public class BackgroundSound extends Service {
                 break;
         }
 
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        mediaPlayer.setOnPreparedListener(this);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -55,5 +54,11 @@ public class BackgroundSound extends Service {
         mediaPlayer.stop();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 }
